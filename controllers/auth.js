@@ -83,7 +83,7 @@ const addDataToBoard = async (req, res) => {
       return res.status(404).json({ error: "Dashboard not found" });
     }
 
-    const toDoBoard = dashboard.boards.toDo; // Используем точечную нотацию
+    const toDoBoard = dashboard.boards.toDo;
 
     if (!toDoBoard) {
       return res.status(404).json({ error: "ToDo Board not found" });
@@ -95,6 +95,7 @@ const addDataToBoard = async (req, res) => {
 
     await dashboard.save();
 
+    // Return the updated dashboard
     res.status(200).json({ dashboard });
   } catch (error) {
     console.error("Error adding data to ToDo board:", error);
@@ -112,6 +113,7 @@ const getDashboardById = async (req, res) => {
       return res.status(404).json({ error: "Dashboard not found" });
     }
 
+    // Return the updated dashboard
     res.status(200).json({ dashboard });
   } catch (error) {
     console.error("Error fetching dashboard by ID:", error);
