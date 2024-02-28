@@ -1,47 +1,28 @@
 import { Schema, model } from "mongoose";
 
-import handleMongooseError from "../helpers/handleMongooseError.js";
-
-import emailRegexp from "../helpers/regExp.js";
-
-const userSchema = new Schema(
-  {
-    email: {
-      type: String,
-      required: [true, "Email is required"],
-      match: emailRegexp,
-      unique: true,
-    },
-    password: {
-      type: String,
-      minlength: 6,
-      required: [true, "Set password for user"],
-    },
-    accessToken: {
-      type: String,
-      default: "",
-    },
+const itemSchema = new Schema({
+  id: {
+    type: String,
+    required: true,
   },
-  { versionKey: false, timestamps: true }
-);
+  title: {
+    type: String,
+    required: true,
+  },
+  description: String,
+});
 
 const boardSchema = new Schema({
   id: {
     type: String,
     required: true,
   },
-  nameOfBoard: {
+  title: {
     type: String,
     required: true,
-    default: "To Do", // Задаем значение по умолчанию
+    default: "To Do",
   },
-  data: [
-    {
-      id: String,
-      title: String,
-      description: String,
-    },
-  ],
+  items: [itemSchema], // Используем обновленную схему itemSchema
 });
 
 const dashboardSchema = new Schema({
@@ -49,15 +30,13 @@ const dashboardSchema = new Schema({
     type: String,
     required: true,
   },
-  boards: [boardSchema],
+  boards: {
+    toDo: boardSchema,
+    inProgress: boardSchema,
+    done: boardSchema,
+  },
 });
 
 const Dashboard = model("Dashboard", dashboardSchema);
 
 export default Dashboard;
-
-userSchema.post("save", handleMongooseError);
-
-const User = model("user", userSchema);
-
-// export default User;

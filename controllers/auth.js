@@ -6,6 +6,8 @@ import Dashboard from "../models/user.js";
 import HttpError from "../helpers/HttpError.js";
 import ctrlWrapper from "../helpers/ctrlWrapper.js";
 
+import { v4 as uuidv4 } from "uuid";
+
 dotenv.config();
 
 const { SECRET_KEY } = process.env;
@@ -27,9 +29,39 @@ const createDashboard = async (req, res) => {
   try {
     const { title } = req.body;
 
+    const initialData = [
+      {
+        id: "1",
+        title:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent.",
+        description: "25-May-2020",
+      },
+      {
+        id: "2",
+        title: "Fix Styling",
+        description: "26-May-2020",
+      },
+    ];
+
     const newDashboard = new Dashboard({
       title,
-      boards: [],
+      boards: {
+        toDo: {
+          title: "To Do",
+          items: initialData,
+          id: uuidv4(),
+        },
+        inProgress: {
+          title: "In Progress",
+          items: [],
+          id: uuidv4(),
+        },
+        done: {
+          title: "Done",
+          items: [],
+          id: uuidv4(),
+        },
+      },
     });
 
     const savedDashboard = await newDashboard.save();
@@ -43,33 +75,29 @@ const createDashboard = async (req, res) => {
 
 const addDataToBoard = async (req, res) => {
   try {
-    const { dashboardId, boardId, newData } = req.body;
+    const { dashboardId, newData } = req.body;
 
-    // Находим дашборд по ID
     const dashboard = await Dashboard.findById(dashboardId);
 
     if (!dashboard) {
       return res.status(404).json({ error: "Dashboard not found" });
     }
 
-    // Находим board по ID
-    const board = dashboard.boards.find((board) => board.id === boardId);
+    const toDoBoard = dashboard.boards.toDo; // Используем точечную нотацию
 
-    console.log(dashboard);
-
-    if (!board) {
-      return res.status(404).json({ error: "Board not found" });
+    if (!toDoBoard) {
+      return res.status(404).json({ error: "ToDo Board not found" });
     }
 
-    newData.nameOfBoard = "To Do";
+    newData.id = uuidv4();
 
-    board.data.push(newData);
+    toDoBoard.items.push(newData);
 
     await dashboard.save();
 
     res.status(200).json({ dashboard });
   } catch (error) {
-    console.error("Error adding data to board:", error);
+    console.error("Error adding data to ToDo board:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
