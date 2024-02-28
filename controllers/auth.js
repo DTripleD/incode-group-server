@@ -10,8 +10,6 @@ dotenv.config();
 
 const { SECRET_KEY } = process.env;
 
-const accessTokenExpires = "24h";
-
 const getDashboards = async (req, res) => {
   try {
     const dashboards = await Dashboard.find();
