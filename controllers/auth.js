@@ -77,10 +77,6 @@ const addDataToBoard = async (req, res) => {
 };
 
 export default {
-  signUp: ctrlWrapper(signUp),
-  signIn: ctrlWrapper(signIn),
-  getCurrentUser: ctrlWrapper(getCurrentUser),
-  logoutUser: ctrlWrapper(logoutUser),
   getDashboards: ctrlWrapper(getDashboards),
   createDashboard: ctrlWrapper(createDashboard),
   addDataToBoard: ctrlWrapper(addDataToBoard),
