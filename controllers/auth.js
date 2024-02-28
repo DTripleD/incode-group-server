@@ -102,8 +102,26 @@ const addDataToBoard = async (req, res) => {
   }
 };
 
+const getDashboardById = async (req, res) => {
+  try {
+    const { dashboardId } = req.params;
+
+    const dashboard = await Dashboard.findById(dashboardId);
+
+    if (!dashboard) {
+      return res.status(404).json({ error: "Dashboard not found" });
+    }
+
+    res.status(200).json({ dashboard });
+  } catch (error) {
+    console.error("Error fetching dashboard by ID:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 export default {
   getDashboards: ctrlWrapper(getDashboards),
   createDashboard: ctrlWrapper(createDashboard),
   addDataToBoard: ctrlWrapper(addDataToBoard),
+  getDashboardById: ctrlWrapper(getDashboardById),
 };

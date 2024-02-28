@@ -14,4 +14,6 @@ router.post("/dashboard", controllers.createDashboard);
 
 router.post("/dashboard/addDataToBoard", controllers.addDataToBoard);
 
+router.get("/dashboard/:dashboardId", controllers.getDashboardById);
+
 export default router;
