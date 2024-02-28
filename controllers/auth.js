@@ -121,9 +121,32 @@ const getDashboardById = async (req, res) => {
   }
 };
 
+const updateBoards = async (req, res) => {
+  try {
+    const { dashboardId, newBoards } = req.body;
+
+    const dashboard = await Dashboard.findById(dashboardId);
+
+    if (!dashboard) {
+      return res.status(404).json({ error: "Dashboard not found" });
+    }
+
+    // Полностью перезаписываем boards
+    dashboard.boards = newBoards;
+
+    const updatedDashboard = await dashboard.save();
+
+    res.status(200).json({ dashboard: updatedDashboard });
+  } catch (error) {
+    console.error("Error updating boards:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 export default {
   getDashboards: ctrlWrapper(getDashboards),
   createDashboard: ctrlWrapper(createDashboard),
   addDataToBoard: ctrlWrapper(addDataToBoard),
   getDashboardById: ctrlWrapper(getDashboardById),
+  updateBoards: ctrlWrapper(updateBoards),
 };
