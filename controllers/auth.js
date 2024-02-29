@@ -176,6 +176,77 @@ const updateDashboardTitle = async (req, res) => {
   }
 };
 
+const updateItemTitle = async (req, res) => {
+  try {
+    const { dashboardId, itemId, newTitle, newDescription } = req.body;
+
+    const dashboard = await Dashboard.findById(dashboardId);
+
+    if (!dashboard) {
+      return res.status(404).json({ error: "Dashboard not found" });
+    }
+
+    // Поиск элемента во всех досках
+    for (const boardId of Object.keys(dashboard.boards)) {
+      const board = dashboard.boards[boardId];
+      const itemIndex = board.items.findIndex(
+        (item) => item._id.toString() === itemId
+      );
+
+      if (itemIndex !== -1) {
+        // Обновление заголовка элемента
+        board.items[itemIndex].title = newTitle;
+        board.items[itemIndex].description = newDescription;
+
+        await dashboard.save();
+
+        return res.status(200).json({ dashboard });
+      }
+    }
+
+    // Если элемент не найден во всех досках
+    return res.status(404).json({ error: "Item not found" });
+  } catch (error) {
+    console.error("Error updating item title:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const deleteItemById = async (req, res) => {
+  try {
+    const { dashboardId, itemId } = req.body;
+
+    const dashboard = await Dashboard.findById(dashboardId);
+
+    if (!dashboard) {
+      return res.status(404).json({ error: "Dashboard not found" });
+    }
+
+    // Поиск элемента во всех досках
+    for (const boardId of Object.keys(dashboard.boards)) {
+      const board = dashboard.boards[boardId];
+      const itemIndex = board.items.findIndex(
+        (item) => item._id.toString() === itemId
+      );
+
+      if (itemIndex !== -1) {
+        // Удаление элемента из массива
+        board.items.splice(itemIndex, 1);
+
+        await dashboard.save();
+
+        return res.status(200).json({ dashboard });
+      }
+    }
+
+    // Если элемент не найден во всех досках
+    return res.status(404).json({ error: "Item not found" });
+  } catch (error) {
+    console.error("Error deleting item:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 export default {
   getDashboards: ctrlWrapper(getDashboards),
   createDashboard: ctrlWrapper(createDashboard),
@@ -184,4 +255,6 @@ export default {
   updateBoards: ctrlWrapper(updateBoards),
   deleteDashboard: ctrlWrapper(deleteDashboard),
   updateDashboardTitle: ctrlWrapper(updateDashboardTitle),
+  updateItemTitle: ctrlWrapper(updateItemTitle),
+  deleteItemById: ctrlWrapper(deleteItemById),
 };

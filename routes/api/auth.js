@@ -18,4 +18,8 @@ router.delete("/dashboard", controllers.deleteDashboard);
 
 router.put("/dashboard", controllers.updateDashboardTitle);
 
+router.put("/dashboard/updateItemTitle", controllers.updateItemTitle);
+
+router.delete("/dashboard/deleteItem", controllers.deleteItemById);
+
 export default router;
