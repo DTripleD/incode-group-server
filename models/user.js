@@ -22,7 +22,7 @@ const boardSchema = new Schema({
     required: true,
     default: "To Do",
   },
-  items: [itemSchema], // Используем обновленную схему itemSchema
+  items: [itemSchema],
 });
 
 const dashboardSchema = new Schema({

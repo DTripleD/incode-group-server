@@ -3,14 +3,12 @@
 import dotenv from "dotenv";
 
 import Dashboard from "../models/user.js";
-import HttpError from "../helpers/HttpError.js";
+
 import ctrlWrapper from "../helpers/ctrlWrapper.js";
 
 import { v4 as uuidv4 } from "uuid";
 
 dotenv.config();
-
-const { SECRET_KEY } = process.env;
 
 const getDashboards = async (req, res) => {
   try {
@@ -95,7 +93,6 @@ const addDataToBoard = async (req, res) => {
 
     await dashboard.save();
 
-    // Return the updated dashboard
     res.status(200).json({ dashboard });
   } catch (error) {
     console.error("Error adding data to ToDo board:", error);
@@ -113,7 +110,6 @@ const getDashboardById = async (req, res) => {
       return res.status(404).json({ error: "Dashboard not found" });
     }
 
-    // Return the updated dashboard
     res.status(200).json({ dashboard });
   } catch (error) {
     console.error("Error fetching dashboard by ID:", error);
@@ -131,7 +127,6 @@ const updateBoards = async (req, res) => {
       return res.status(404).json({ error: "Dashboard not found" });
     }
 
-    // Полностью перезаписываем boards
     dashboard.boards = newBoards;
 
     const updatedDashboard = await dashboard.save();
@@ -143,10 +138,50 @@ const updateBoards = async (req, res) => {
   }
 };
 
+const deleteDashboard = async (req, res) => {
+  try {
+    const { dashboardId } = req.body;
+
+    const deletedDashboard = await Dashboard.findByIdAndDelete(dashboardId);
+
+    if (!deletedDashboard) {
+      return res.status(404).json({ error: "Dashboard not found" });
+    }
+
+    res.status(200).json({ message: "Dashboard deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting dashboard:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const updateDashboardTitle = async (req, res) => {
+  try {
+    const { newTitle, dashboardId } = req.body;
+
+    const dashboard = await Dashboard.findByIdAndUpdate(
+      dashboardId,
+      { $set: { title: newTitle } },
+      { new: true }
+    );
+
+    if (!dashboard) {
+      return res.status(404).json({ error: "Dashboard not found" });
+    }
+
+    res.status(200).json({ dashboard });
+  } catch (error) {
+    console.error("Error updating dashboard title:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 export default {
   getDashboards: ctrlWrapper(getDashboards),
   createDashboard: ctrlWrapper(createDashboard),
   addDataToBoard: ctrlWrapper(addDataToBoard),
   getDashboardById: ctrlWrapper(getDashboardById),
   updateBoards: ctrlWrapper(updateBoards),
+  deleteDashboard: ctrlWrapper(deleteDashboard),
+  updateDashboardTitle: ctrlWrapper(updateDashboardTitle),
 };
