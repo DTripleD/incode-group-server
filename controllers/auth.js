@@ -140,7 +140,7 @@ const updateBoards = async (req, res) => {
 
 const deleteDashboard = async (req, res) => {
   try {
-    const { dashboardId } = req.body;
+    const { dashboardId } = req.params;
 
     const deletedDashboard = await Dashboard.findByIdAndDelete(dashboardId);
 

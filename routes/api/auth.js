@@ -14,7 +14,7 @@ router.get("/dashboard/:dashboardId", controllers.getDashboardById);
 
 router.post("/dashboard/updateBoards", controllers.updateBoards);
 
-router.delete("/dashboard", controllers.deleteDashboard);
+router.delete("/dashboard/:dashboardId", controllers.deleteDashboard);
 
 router.put("/dashboard", controllers.updateDashboardTitle);
 
