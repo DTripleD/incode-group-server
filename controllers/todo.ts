@@ -20,26 +20,12 @@ const createDashboard = async (req, res) => {
   try {
     const { title } = req.body;
 
-    const initialData = [
-      {
-        id: "1",
-        title:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent.",
-        description: "25-May-2020",
-      },
-      {
-        id: "2",
-        title: "Fix Styling",
-        description: "26-May-2020",
-      },
-    ];
-
     const newDashboard = new Dashboard({
       title,
       boards: {
         toDo: {
           title: "To Do",
-          items: initialData,
+          items: [],
           id: uuidv4(),
         },
         inProgress: {
@@ -202,11 +188,15 @@ const updateItemTitle = async (req, res) => {
   }
 };
 
-const deleteItemById = async (req, res) => {
+const deleteItem = async (req, res) => {
   try {
     const { dashboardId, itemId } = req.body;
 
+    console.log(dashboardId);
+
     const dashboard = await Dashboard.findById(dashboardId);
+
+    console.log(Dashboard);
 
     if (!dashboard) {
       return res.status(404).json({ error: "Dashboard not found" });
@@ -243,5 +233,5 @@ module.exports = {
   deleteDashboard: ctrlWrapper(deleteDashboard),
   updateDashboardTitle: ctrlWrapper(updateDashboardTitle),
   updateItemTitle: ctrlWrapper(updateItemTitle),
-  deleteItemById: ctrlWrapper(deleteItemById),
+  deleteItem: ctrlWrapper(deleteItem),
 };
