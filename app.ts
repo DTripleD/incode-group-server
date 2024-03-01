@@ -1,13 +1,13 @@
-import express from "express";
-import logger from "morgan";
-import cors from "cors";
-import dotenv from "dotenv";
+let express = require("express");
+let logger = require("morgan");
+let cors = require("cors");
+dotenv = require("dotenv");
 
-import authRouter from "./routes/api/auth.js";
+let todoRouter = require("./routes/api/todo.ts");
 
 dotenv.config();
 
-const app = express();
+app = express();
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 
@@ -15,7 +15,7 @@ app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
 
-app.use(authRouter);
+app.use(todoRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
@@ -27,4 +27,4 @@ app.use((err, req, res, next) => {
   res.status(status).json({ message });
 });
 
-export default app;
+module.exports = app;

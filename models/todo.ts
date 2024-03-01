@@ -1,4 +1,7 @@
-import { Schema, model } from "mongoose";
+const mongoose = require("mongoose");
+
+const Schema = mongoose.Schema;
+const model = mongoose.model;
 
 const itemSchema = new Schema({
   id: {
@@ -37,6 +40,4 @@ const dashboardSchema = new Schema({
   },
 });
 
-const Dashboard = model("Dashboard", dashboardSchema);
-
-export default Dashboard;
+module.exports = model("Dashboard", dashboardSchema);

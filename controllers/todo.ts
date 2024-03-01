@@ -1,12 +1,7 @@
-// import bcrypt from "bcrypt";
-// import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
-
-import Dashboard from "../models/user.js";
-
-import ctrlWrapper from "../helpers/ctrlWrapper.js";
-
-import { v4 as uuidv4 } from "uuid";
+const dotenv = require("dotenv");
+const Dashboard = require("../models/todo.ts");
+const ctrlWrapper = require("../helpers/ctrlWrapper.ts");
+const { v4: uuidv4 } = require("uuid");
 
 dotenv.config();
 
@@ -15,8 +10,6 @@ const getDashboards = async (req, res) => {
     const dashboards = await Dashboard.find();
 
     res.json({ dashboards });
-
-    console.log(dashboards);
   } catch (error) {
     console.error("Error fetching dashboards:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -186,7 +179,6 @@ const updateItemTitle = async (req, res) => {
       return res.status(404).json({ error: "Dashboard not found" });
     }
 
-    // Поиск элемента во всех досках
     for (const boardId of Object.keys(dashboard.boards)) {
       const board = dashboard.boards[boardId];
       const itemIndex = board.items.findIndex(
@@ -194,7 +186,6 @@ const updateItemTitle = async (req, res) => {
       );
 
       if (itemIndex !== -1) {
-        // Обновление заголовка элемента
         board.items[itemIndex].title = newTitle;
         board.items[itemIndex].description = newDescription;
 
@@ -204,7 +195,6 @@ const updateItemTitle = async (req, res) => {
       }
     }
 
-    // Если элемент не найден во всех досках
     return res.status(404).json({ error: "Item not found" });
   } catch (error) {
     console.error("Error updating item title:", error);
@@ -222,7 +212,6 @@ const deleteItemById = async (req, res) => {
       return res.status(404).json({ error: "Dashboard not found" });
     }
 
-    // Поиск элемента во всех досках
     for (const boardId of Object.keys(dashboard.boards)) {
       const board = dashboard.boards[boardId];
       const itemIndex = board.items.findIndex(
@@ -230,7 +219,6 @@ const deleteItemById = async (req, res) => {
       );
 
       if (itemIndex !== -1) {
-        // Удаление элемента из массива
         board.items.splice(itemIndex, 1);
 
         await dashboard.save();
@@ -239,7 +227,6 @@ const deleteItemById = async (req, res) => {
       }
     }
 
-    // Если элемент не найден во всех досках
     return res.status(404).json({ error: "Item not found" });
   } catch (error) {
     console.error("Error deleting item:", error);
@@ -247,7 +234,7 @@ const deleteItemById = async (req, res) => {
   }
 };
 
-export default {
+module.exports = {
   getDashboards: ctrlWrapper(getDashboards),
   createDashboard: ctrlWrapper(createDashboard),
   addDataToBoard: ctrlWrapper(addDataToBoard),

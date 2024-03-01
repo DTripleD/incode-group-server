@@ -2,13 +2,12 @@
   "name": "incode-test-server",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "engines": {
     "node": ">=16.0"
   },
   "scripts": {
-    "start": "cross-env NODE_ENV=production node ./server.js",
-    "start:dev": "cross-env NODE_ENV=development nodemon ./server.js",
+    "start": "cross-env NODE_ENV=production node ./server.ts",
+    "start:dev": "cross-env NODE_ENV=development nodemon ./server.ts",
     "lint": "eslint **/*.js",
     "lint:fix": "eslint --fix **/*.js"
   },
@@ -28,5 +27,9 @@
     "morgan": "^1.10.0",
     "nodemon": "^3.0.1",
     "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.24",
+    "typescript": "^5.3.3"
   }
 }

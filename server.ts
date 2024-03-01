@@ -1,6 +1,6 @@
-import app from "./app.js";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
+let app = require("./app.ts");
+let mongoose = require("mongoose");
+let dotenv = require("dotenv");
 
 mongoose.set("strictQuery", true);
 

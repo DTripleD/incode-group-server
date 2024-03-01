@@ -1,6 +1,6 @@
-import express from "express";
+let controllers = require("../../controllers/todo.ts");
 
-import controllers from "../../controllers/auth.js";
+let express = require("express");
 
 const router = express.Router();
 
@@ -22,4 +22,4 @@ router.put("/dashboard/updateItemTitle", controllers.updateItemTitle);
 
 router.delete("/dashboard/deleteItem", controllers.deleteItemById);
 
-export default router;
+module.exports = router;
